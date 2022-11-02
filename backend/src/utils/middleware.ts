@@ -26,6 +26,17 @@ const errorHandler: ErrorRequestHandler = (
       logger.info(error.message);
    }
 
+   if (error.name === 'ValidationError') {
+      const errormsg = Object.values(error.errors)
+         .map((item: any) => item.message)
+         .join(',');
+
+      response.status(StatusCodes.BAD_REQUEST).json({
+         // @ts-ignore
+         error: Object.values(error.errors)[0].message,
+      });
+   }
+
    next();
 };
 
