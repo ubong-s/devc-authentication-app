@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import Loading from './components/Loading/Loading';
 import Navbar from './components/Navbar/Navbar';
 import { GlobalStyle } from './styles/globalStyles';
 import { myTheme } from './styles/myTheme';
@@ -15,7 +16,7 @@ function App() {
       <BrowserRouter>
          <ThemeProvider theme={myTheme.light}>
             <GlobalStyle />
-            <Suspense fallback='Loading...'>
+            <Suspense fallback={<Loading />}>
                {/* <Navbar /> */}
                <Routes>
                   <Route path='register' element={<Register />} />

@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/userContext';
 import useField from '../../hooks/useField';
-import useLocalState from '../../hooks/useLocalState';
 import loginService from '../../services/login';
 import { Form } from './Form.styles';
 
