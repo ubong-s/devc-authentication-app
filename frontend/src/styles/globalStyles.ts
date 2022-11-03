@@ -5,7 +5,7 @@ const misc = {
       xs: '8px',
       sm: '10px',
       md: '15px',
-      lg: '20px',
+      lg: '24px',
       full: '999px',
    },
    transition: {
@@ -36,10 +36,10 @@ const breakpoints = {
 
 const bodyStyles = css`
    font-family: ${typography.type.primary};
-   font-size: 1rem;
+   font-size: 14px;
    background-color: ${(props) => props.theme.BG};
-   color: ${(props) => props.theme.darkLight};
-   line-height: 1.6;
+   color: ${(props) => props.theme.black};
+   line-height: 24.79px;
    max-width: 1600px;
    font-weight: ${typography.weight.normal};
    margin: auto;
@@ -47,18 +47,8 @@ const bodyStyles = css`
    overflow-y: scroll;
    overflow-x: hidden;
 
-   &::-webkit-scrollbar {
-      width: 0.75em;
-   }
-
-   &::-webkit-scrollbar-track {
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-   }
-
-   &::-webkit-scrollbar-thumb {
-      background-color: darkgrey;
-      border-radius: 10px;
-      /* outline: 1px solid slategrey; */
+   @media screen and (min-width: ${breakpoints.desktop}) {
+      font-size: 1rem;
    }
 
    *,
@@ -82,15 +72,15 @@ const bodyStyles = css`
    h6 {
       font-weight: ${typography.weight.semibold};
       letter-spacing: 0.5px;
-      line-height: 1;
-      color: ${(props) => props.theme.dark};
+      line-height: 24.5px;
+      color: ${(props) => props.theme.black};
    }
 
    p {
-      font-size: 1rem;
+      font-size: 14px;
       margin-bottom: 1rem;
 
-      @media screen and (min-width: ${breakpoints.tablet}) {
+      @media screen and (min-width: ${breakpoints.desktop}) {
          font-size: 1rem;
       }
    }
@@ -106,6 +96,16 @@ const bodyStyles = css`
    a {
       text-decoration: none;
       letter-spacing: 0.5px;
+   }
+
+   .container {
+      width: 90%;
+      max-width: 1300px;
+      margin: auto;
+   }
+
+   button {
+      cursor: pointer;
    }
 `;
 

@@ -7,5 +7,6 @@ export const myTheme = {
       white: '#FFF',
       black: '#333333',
       darkLight: '#828282',
+      gray: '#BDBDBD',
    },
 };
