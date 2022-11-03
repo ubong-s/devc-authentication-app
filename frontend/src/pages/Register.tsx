@@ -1,12 +1,18 @@
 import FormBoxFooter from '../components/Forms/FormBoxFooter';
 import FormBoxHeader from '../components/Forms/FormBoxHeader';
 import RegisterForm from '../components/Forms/RegisterForm';
+import useLocalState from '../hooks/useLocalState';
 import { RegisterBox, RegisterRoot } from './Register.styles';
 
 const Register = () => {
+   const { alert, showAlert, loading, setLoading, hideAlert } = useLocalState();
+
    return (
       <RegisterRoot>
          <div className='container'>
+            {alert.show && (
+               <div className={`alert ${alert.type}`}>{alert.text}</div>
+            )}
             <RegisterBox>
                {/* Form Header */}
                <FormBoxHeader
@@ -18,7 +24,12 @@ const Register = () => {
                />
 
                {/* Register Form */}
-               <RegisterForm />
+               <RegisterForm
+                  showAlert={showAlert}
+                  setLoading={setLoading}
+                  hideAlert={hideAlert}
+                  loading={loading}
+               />
 
                {/* Form Footer */}
                <FormBoxFooter linkText='Login' linkUrl='/' />

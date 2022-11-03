@@ -8,5 +8,9 @@ export const myTheme = {
       black: '#333333',
       darkLight: '#828282',
       gray: '#BDBDBD',
+      redLight: '#f8d7da',
+      redDark: '#842029',
+      greenLight: '#d1e7dd',
+      greenDark: '#0f5132',
    },
 };

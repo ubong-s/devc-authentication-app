@@ -15,13 +15,13 @@ authRouter.post('/register', async (request, response) => {
    if (emailAlreadyExists) {
       return response
          .status(StatusCodes.BAD_REQUEST)
-         .json({ error: 'Email already exists' });
+         .json({ msg: 'Email already exists' });
    }
 
    if (password !== password2) {
       return response
          .status(StatusCodes.BAD_REQUEST)
-         .json({ error: `Passwords don't match` });
+         .json({ msg: `Passwords don't match` });
    }
 
    // first user as admin
@@ -30,8 +30,8 @@ authRouter.post('/register', async (request, response) => {
 
    const verificationToken = crypto.randomBytes(40).toString('hex');
 
-   await mailer.sendEmail();
    const user = await User.create({ email, password, role, verificationToken });
+   // await mailer.sendEmail();
 
    // Send Verification Token back while testing in postman
    response.status(StatusCodes.OK).json({
@@ -51,13 +51,13 @@ authRouter.post('/verify-email', async (request, response) => {
    if (!user) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
-         .json({ error: 'Verification failed' });
+         .json({ msg: 'Verification failed' });
    }
 
    if (user.verificationToken !== verificationToken) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
-         .json({ error: 'Verification failed' });
+         .json({ msg: 'Verification failed' });
    }
 
    user.isVerified = true;
@@ -75,7 +75,7 @@ authRouter.post('/login', async (request, response) => {
    if (!email || !password) {
       return response
          .status(StatusCodes.BAD_REQUEST)
-         .json({ error: `Please provide email and password` });
+         .json({ msg: `Please provide email and password` });
    }
 
    const user = await User.findOne({ email });
@@ -83,7 +83,7 @@ authRouter.post('/login', async (request, response) => {
    if (!user) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
-         .json({ error: `Invalid credentials` });
+         .json({ msg: `Invalid credentials` });
    }
 
    // @ts-ignore
@@ -92,13 +92,13 @@ authRouter.post('/login', async (request, response) => {
    if (!passwordsMatch) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
-         .json({ error: `Invalid credentials` });
+         .json({ msg: `Invalid credentials` });
    }
 
    if (!user.isVerified) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
-         .json({ error: `Please verify your email` });
+         .json({ msg: `Please verify your email` });
    }
 
    const tokenUser = jwt.createTokenUser(user);

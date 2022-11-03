@@ -33,7 +33,7 @@ const errorHandler: ErrorRequestHandler = (
 
       response.status(StatusCodes.BAD_REQUEST).json({
          // @ts-ignore
-         error: Object.values(error.errors)[0].message,
+         msg: errormsg,
       });
    }
 

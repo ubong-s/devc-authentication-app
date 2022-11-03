@@ -1,12 +1,18 @@
 import FormBoxFooter from '../components/Forms/FormBoxFooter';
 import FormBoxHeader from '../components/Forms/FormBoxHeader';
 import LoginForm from '../components/Forms/LoginForm';
+import useLocalState from '../hooks/useLocalState';
 import { LoginBox, LoginRoot } from './Login.styles';
 
 const Login = () => {
+   const { alert, showAlert, loading, setLoading, hideAlert } = useLocalState();
+
    return (
       <LoginRoot>
          <div className='container'>
+            {alert.show && (
+               <div className={`alert ${alert.type}`}>{alert.text}</div>
+            )}
             <LoginBox>
                {/* Form Header */}
                <FormBoxHeader
@@ -18,7 +24,12 @@ const Login = () => {
                />
 
                {/* Login Form */}
-               <LoginForm />
+               <LoginForm
+                  showAlert={showAlert}
+                  setLoading={setLoading}
+                  hideAlert={hideAlert}
+                  loading={loading}
+               />
 
                {/* Form Footer */}
                <FormBoxFooter linkText='Register' linkUrl='/register' />

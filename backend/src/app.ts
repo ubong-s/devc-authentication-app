@@ -18,7 +18,6 @@ app.use(cookieParser(config.JWT_SECRET));
 
 // Routes
 app.get('/', async (request, response) => {
-   await mailer.verifyMailer();
    response.send('Authentication App');
 });
 app.use('/api/auth', authRouter);

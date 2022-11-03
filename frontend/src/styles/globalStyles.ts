@@ -104,6 +104,26 @@ const bodyStyles = css`
       margin: auto;
    }
 
+   .alert {
+      max-width: 475px;
+      margin: auto;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      border-radius: ${misc.rounded.sm};
+      color: ${(props) => props.theme.white};
+
+      &.danger {
+         background-color: ${(props) => props.theme.redLight};
+         color: ${(props) => props.theme.redDark};
+      }
+
+      &.success {
+         background-color: ${(props) => props.theme.greenLight};
+         color: ${(props) => props.theme.greenDark};
+      }
+   }
+
    button {
       cursor: pointer;
    }

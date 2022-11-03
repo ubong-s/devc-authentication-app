@@ -49,5 +49,10 @@ export const Form = styled.form`
       height: 40px;
       border: none;
       border-radius: ${misc.rounded.xs};
+
+      &:disabled {
+         opacity: 0.5;
+         cursor: not-allowed;
+      }
    }
 `;

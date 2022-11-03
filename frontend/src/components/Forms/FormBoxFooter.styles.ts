@@ -5,5 +5,9 @@ export const FormBoxFooterRoot = styled.div`
 
    p {
       font-size: 14px;
+
+      a {
+         color: ${(props) => props.theme.blue};
+      }
    }
 `;

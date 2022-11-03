@@ -10,7 +10,6 @@ interface FormBoxFooterProps {
 const FormBoxFooter = ({ linkUrl, linkText }: FormBoxFooterProps) => {
    return (
       <FormBoxFooterRoot>
-         {' '}
          <div>
             <p>or continue with these social profiles</p>
 
