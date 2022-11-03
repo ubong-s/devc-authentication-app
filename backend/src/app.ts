@@ -5,6 +5,7 @@ import middleware from './utils/middleware';
 import config from './utils/config';
 import logger from './utils/logger';
 import authRouter from './controllers/auth';
+import mailer from './utils/mailer';
 
 // app initialize
 const app = express();
@@ -16,8 +17,8 @@ app.use(middleware.requestLogger);
 app.use(cookieParser(config.JWT_SECRET));
 
 // Routes
-app.get('/', (request, response) => {
-   logger.info('Cookies', request.cookies);
+app.get('/', async (request, response) => {
+   await mailer.verifyMailer();
    response.send('Authentication App');
 });
 app.use('/api/auth', authRouter);

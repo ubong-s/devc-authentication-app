@@ -37,6 +37,9 @@ const errorHandler: ErrorRequestHandler = (
       });
    }
 
+   if (error.code === 'ESOCKET') {
+      logger.info(error);
+   }
    next();
 };
 

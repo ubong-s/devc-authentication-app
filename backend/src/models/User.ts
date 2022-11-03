@@ -55,4 +55,10 @@ UserSchema.pre('save', async function () {
    this.password = await bcrypt.hash(this.password, salt);
 });
 
+UserSchema.methods.comparePassword = async function (userPassword: string) {
+   const isMatch = await bcrypt.compare(userPassword, this.password);
+
+   return isMatch;
+};
+
 export default mongoose.model('User', UserSchema);
