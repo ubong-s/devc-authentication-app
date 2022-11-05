@@ -44,8 +44,6 @@ const bodyStyles = css`
    font-weight: ${typography.weight.normal};
    margin: auto;
    transition: ${misc.transition.ease};
-   overflow-y: scroll;
-   overflow-x: hidden;
 
    @media screen and (min-width: ${breakpoints.desktop}) {
       font-size: 1rem;
@@ -101,7 +99,7 @@ const bodyStyles = css`
    .container {
       width: 90%;
       max-width: 1300px;
-      margin: auto;
+      margin: 0 auto;
    }
 
    .alert {
@@ -124,8 +122,26 @@ const bodyStyles = css`
       }
    }
 
-   button {
+   button,
+   .btn {
+      display: inline-block;
       cursor: pointer;
+      background-color: ${(props) => props.theme.blue};
+      color: ${(props) => props.theme.white};
+      font-weight: ${typography.weight.semibold};
+      height: 40px;
+      border: none;
+      border-radius: ${misc.rounded.xs};
+      padding: 0.5rem 1rem;
+
+      &:disabled {
+         opacity: 0.5;
+         cursor: not-allowed;
+      }
+   }
+
+   .btn {
+      margin-top: 1rem;
    }
 `;
 

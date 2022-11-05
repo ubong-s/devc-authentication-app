@@ -2,18 +2,18 @@ import FormBoxFooter from '../components/Forms/FormBoxFooter';
 import FormBoxHeader from '../components/Forms/FormBoxHeader';
 import RegisterForm from '../components/Forms/RegisterForm';
 import useLocalState from '../hooks/useLocalState';
-import { RegisterBox, RegisterRoot } from './Register.styles';
+import { Box, PageRoot } from './Pages.styles';
 
 const Register = () => {
    const { alert, showAlert, loading, setLoading, hideAlert } = useLocalState();
 
    return (
-      <RegisterRoot>
+      <PageRoot>
          <div className='container'>
             {alert.show && (
                <div className={`alert ${alert.type}`}>{alert.text}</div>
             )}
-            <RegisterBox>
+            <Box>
                {/* Form Header */}
                <FormBoxHeader
                   title='Join thousands of learners from around the world'
@@ -33,9 +33,9 @@ const Register = () => {
 
                {/* Form Footer */}
                <FormBoxFooter linkText='Login' linkUrl='/' />
-            </RegisterBox>
+            </Box>
          </div>
-      </RegisterRoot>
+      </PageRoot>
    );
 };
 

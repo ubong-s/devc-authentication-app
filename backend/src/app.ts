@@ -3,9 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import middleware from './utils/middleware';
 import config from './utils/config';
-import logger from './utils/logger';
 import authRouter from './controllers/auth';
-import mailer from './utils/mailer';
 
 // app initialize
 const app = express();

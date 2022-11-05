@@ -31,16 +31,20 @@ authRouter.post('/register', async (request, response) => {
    const verificationToken = crypto.randomBytes(40).toString('hex');
 
    const user = await User.create({ email, password, role, verificationToken });
-   // await mailer.sendEmail();
 
+   const origin = `http://localhost:3000`;
+
+   // await mailer.sendVerificationEmail({
+   //    name: '',
+   //    email: user.email,
+   //    verificationToken: user.verificationToken,
+   //    origin,
+   // });
    // Send Verification Token back while testing in postman
    response.status(StatusCodes.OK).json({
       msg: 'Success! Please check your email to verify account',
+      verificationToken,
    });
-
-   // const tokenUser = jwt.createTokenUser(user);
-   // jwt.attachCookiesToResponse(response, tokenUser);
-   // response.status(StatusCodes.OK).json({ user: tokenUser });
 });
 
 authRouter.post('/verify-email', async (request, response) => {

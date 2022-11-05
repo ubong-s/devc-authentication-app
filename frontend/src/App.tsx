@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import Loading from './components/Loading/Loading';
 import Navbar from './components/Navbar/Navbar';
+import VerifyEmail from './pages/VerifyEmail';
 import { GlobalStyle } from './styles/globalStyles';
 import { myTheme } from './styles/myTheme';
 
@@ -22,6 +23,7 @@ function App() {
                   <Route path='register' element={<Register />} />
                   <Route path='/' element={<Login />} />
                   <Route path='profile' element={<Profile />} />
+                  <Route path='verify-email' element={<VerifyEmail />} />
                   <Route path='edit-profile' element={<EditProfile />} />
                </Routes>
             </Suspense>

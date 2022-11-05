@@ -1,55 +1,38 @@
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import config from './config';
+import mailerConfig from './mailerConfig';
+
+interface SendMailProps {
+   to: string;
+   subject: string;
+   html: string;
+}
+
+interface SendVerificationEmailProps {
+   name: string;
+   email: string;
+   verificationToken?: string;
+   origin: string;
+}
 
 // request: Request, response: Response
-const sendEmail = async () => {
-   const transporter = nodemailer.createTransport({
-      host: config.EMAIL_HOST,
-      port: 587,
-      auth: {
-         user: config.EMAIL_USER,
-         pass: config.EMAIL_PASSWORD,
-      },
-      debug: true,
-      logger: true,
-      tls: {
-         rejectUnauthorized: false,
-      },
-   });
+const sendEmail = async ({ to, subject, html }: SendMailProps) => {
+   const transporter = nodemailer.createTransport(mailerConfig);
 
    // send mail with defined transport object
-   let info = await transporter.sendMail({
-      from: '"Authentication App 👻" <ubongy@outlook.com>', // sender address
-      to: 'webbymaestro@gmail.com', // list of receivers
-      subject: 'Testing Email', // Subject line
-      text: 'Hello world?', // plain text body
-      html: '<b>Hello world?</b>', // html body
+   await transporter.sendMail({
+      from: '"Authentication App" <ubongy@outlook.com>', // sender address
+      to,
+      subject,
+      html,
    });
-
-   console.log('Message sent: %s', info.messageId);
-   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-   // Preview only available when sending through an Ethereal account
-   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 };
 
 const verifyMailer = async () => {
-   const transporter = nodemailer.createTransport({
-      host: config.EMAIL_HOST,
-      port: 587,
-      auth: {
-         user: config.EMAIL_USER,
-         pass: config.EMAIL_PASSWORD,
-      },
+   const transporter = nodemailer.createTransport(mailerConfig);
 
-      tls: {
-         rejectUnauthorized: false,
-      },
-   });
-
-   transporter.verify(function (error, success) {
+   await transporter.verify(function (error, success) {
       if (error) {
          console.log(error);
       } else {
@@ -58,4 +41,23 @@ const verifyMailer = async () => {
    });
 };
 
-export default { sendEmail, verifyMailer };
+const sendVerificationEmail = async ({
+   name,
+   email,
+   verificationToken,
+   origin,
+}: SendVerificationEmailProps) => {
+   const verifyEmail = `${origin}/verify-email?token=${verificationToken}&email=${email}`;
+
+   const message = `<p>Please confirm your email by clicking on the following link : <a href="${verifyEmail}">Verify Email</a></p>`;
+
+   return sendEmail({
+      to: email,
+      subject: 'Email confirmation',
+      html: `<h4>Hello ${name}</h4>
+      ${message}
+      `,
+   });
+};
+
+export default { sendEmail, verifyMailer, sendVerificationEmail };

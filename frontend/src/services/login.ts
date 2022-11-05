@@ -7,6 +7,11 @@ interface UserProps {
    password2?: string;
 }
 
+interface VerificationProps {
+   email: string | null;
+   verificationToken: string | null;
+}
+
 const register = async (credentials: UserProps) => {
    const response = await axios.post(`${baseUrl}/auth/register`, credentials);
    return response.data;
@@ -17,9 +22,18 @@ const login = async (credentials: UserProps) => {
    return response.data;
 };
 
+const verify = async (credentials: VerificationProps) => {
+   const response = await axios.post(
+      `${baseUrl}/auth/verify-email`,
+      credentials
+   );
+   return response.data;
+};
+
 const loginService = {
    register,
    login,
+   verify,
 };
 
 export default loginService;
