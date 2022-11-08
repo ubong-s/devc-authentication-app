@@ -13,12 +13,20 @@ interface User {
    email: string;
    role: string;
 }
+interface PayloadProps {
+   payload: User;
+}
+
+interface CookiesProps {
+   response: Response;
+   user: User;
+}
 
 const createTokenUser = (user: UserToken) => {
    return { email: user.email, id: String(user._id), role: user.role };
 };
 
-const createJWT = (payload: User) => {
+const createJWT = ({ payload }: PayloadProps) => {
    const token = JWT.sign(payload, config.JWT_SECRET, {
       expiresIn: config.JWT_LIFETIME,
    });
@@ -26,10 +34,14 @@ const createJWT = (payload: User) => {
    return token;
 };
 
-const isTokenValid = (token: string) => JWT.verify(token, config.JWT_SECRET);
+const isTokenValid = (token: string) =>
+   JWT.verify(token, config.JWT_SECRET) as User;
 
-const attachCookiesToResponse = (response: Response, user: User) => {
-   const token = createJWT(user);
+const attachCookiesToResponse = ({ response, user }: CookiesProps) => {
+   const token = createJWT({ payload: user });
+
+   console.log('token :>> ', token);
+   console.log('response.cookie :>> ', response.cookie);
 
    const oneDay = 1000 * 60 * 60 * 24;
 

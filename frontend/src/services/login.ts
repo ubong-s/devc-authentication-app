@@ -18,7 +18,13 @@ const register = async (credentials: UserProps) => {
 };
 
 const login = async (credentials: UserProps) => {
-   const response = await axios.post(`${baseUrl}/auth/login`, credentials);
+   const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/auth/login`,
+      data: credentials,
+      withCredentials: true,
+   });
+
    return response.data;
 };
 

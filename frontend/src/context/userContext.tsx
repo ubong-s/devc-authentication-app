@@ -1,9 +1,11 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import userService from '../services/user';
 
 interface UserAppState {
    data: {
       id: string;
       email: string;
+      role: 'admin';
    } | null;
    error: string | null;
    loading: boolean;
@@ -23,6 +25,32 @@ const UserProvider = ({ children }: any) => {
    const saveUser = (user: any) => {
       setUser(user);
    };
+
+   const removeUser = () => {
+      setUser({
+         data: null,
+         loading: true,
+         error: null,
+      });
+   };
+
+   const fetchUser = async () => {
+      try {
+         const data = await userService.showMe();
+
+         saveUser({
+            data,
+            loading: false,
+            error: false,
+         });
+      } catch (error) {
+         removeUser();
+      }
+   };
+
+   useEffect(() => {
+      fetchUser();
+   }, []);
 
    return (
       <UserContext.Provider value={[user, setUser]}>

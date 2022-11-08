@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Loading from '../components/Loading/Loading';
 import { useUserContext } from '../context/userContext';
 import useLocalState from '../hooks/useLocalState';
 import useQuery from '../hooks/useQuery';
 import loginService from '../services/login';
-import { PageRoot, PageRootAlt } from './Pages.styles';
+import { PageRootAlt } from './Pages.styles';
 
 const VerifyEmail = () => {
    const query = useQuery();

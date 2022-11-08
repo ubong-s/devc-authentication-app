@@ -1,32 +1,76 @@
-import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import Loading from './components/Loading/Loading';
+
+// components
 import Navbar from './components/Navbar/Navbar';
-import VerifyEmail from './pages/VerifyEmail';
+
+// private route
+import { PrivateRoute } from './routes/PrivateRoute';
+
+// context
+import { useUserContext } from './context/userContext';
+
+// styles
 import { GlobalStyle } from './styles/globalStyles';
 import { myTheme } from './styles/myTheme';
 
-const Profile = lazy(() => import('./pages/Profile'));
-const EditProfile = lazy(() => import('./pages/EditProfile'));
-const Register = lazy(() => import('./pages/Register'));
-const Login = lazy(() => import('./pages/Login'));
+// pages
+import VerifyEmail from './pages/VerifyEmail';
+import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { NotLoggedInRoute } from './routes/NotLoggedInRoute';
 
 function App() {
+   const [state] = useUserContext();
+
+   const { data: user } = state;
+
+   console.log(user);
+
    return (
       <BrowserRouter>
          <ThemeProvider theme={myTheme.light}>
             <GlobalStyle />
-            <Suspense fallback={<Loading />}>
-               {/* <Navbar /> */}
-               <Routes>
-                  <Route path='register' element={<Register />} />
-                  <Route path='/' element={<Login />} />
-                  <Route path='profile' element={<Profile />} />
-                  <Route path='verify-email' element={<VerifyEmail />} />
-                  <Route path='edit-profile' element={<EditProfile />} />
-               </Routes>
-            </Suspense>
+
+            {user && <Navbar />}
+            <Routes>
+               <Route
+                  path='/register'
+                  element={
+                     <NotLoggedInRoute>
+                        <Register />
+                     </NotLoggedInRoute>
+                  }
+               />
+               <Route
+                  path='/'
+                  element={
+                     <NotLoggedInRoute>
+                        <Login />
+                     </NotLoggedInRoute>
+                  }
+               />
+               <Route path='/verify-email' element={<VerifyEmail />} />
+
+               <Route
+                  path='/profile'
+                  element={
+                     <PrivateRoute>
+                        <Profile />
+                     </PrivateRoute>
+                  }
+               />
+               <Route
+                  path='/edit-profile'
+                  element={
+                     <PrivateRoute>
+                        <EditProfile />
+                     </PrivateRoute>
+                  }
+               />
+            </Routes>
          </ThemeProvider>
       </BrowserRouter>
    );

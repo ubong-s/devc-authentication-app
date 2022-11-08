@@ -1,6 +1,7 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import logger from './logger';
+import JWT from './jwt';
 
 const requestLogger = (
    request: Request,
@@ -14,6 +15,31 @@ const requestLogger = (
    logger.info('---');
 
    next();
+};
+
+const authenticateUser = async (
+   request: Request,
+   response: Response,
+   next: NextFunction
+) => {
+   const token = request.signedCookies.token;
+
+   if (!token) {
+      return response
+         .status(StatusCodes.UNAUTHORIZED)
+         .json({ msg: 'Authentication Invalid' });
+   }
+
+   try {
+      const { email, id, role } = JWT.isTokenValid(token);
+
+      request.user = { email, id, role };
+      next();
+   } catch (error) {
+      return response
+         .status(StatusCodes.UNAUTHORIZED)
+         .json({ msg: 'Authentication Invalid' });
+   }
 };
 
 const errorHandler: ErrorRequestHandler = (
@@ -32,7 +58,6 @@ const errorHandler: ErrorRequestHandler = (
          .join(',');
 
       response.status(StatusCodes.BAD_REQUEST).json({
-         // @ts-ignore
          msg: errormsg,
       });
    }
@@ -47,4 +72,9 @@ const unknownEndpoint = (request: Request, response: Response) => {
    response.status(StatusCodes.NOT_FOUND).send('The route does not exist');
 };
 
-export default { requestLogger, errorHandler, unknownEndpoint };
+export default {
+   requestLogger,
+   authenticateUser,
+   errorHandler,
+   unknownEndpoint,
+};

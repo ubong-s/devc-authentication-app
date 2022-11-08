@@ -33,6 +33,13 @@ authRouter.post('/register', async (request, response) => {
    const user = await User.create({ email, password, role, verificationToken });
 
    const origin = `http://localhost:3000`;
+   const newOrigin = `https://devubong-auth-app.netlify.app`;
+
+   // console.log('host: ', request.get('host'));
+   // console.log('protocol: ', request.protocol);
+   // console.log('origin: ', request.get('origin'));
+   // console.log('x-forwarded-host: ', request.get('x-forwarded-host'));
+   // console.log('x-forwarded-protocol: ', request.get('x-forwarded-proto'));
 
    // await mailer.sendVerificationEmail({
    //    name: '',
@@ -106,7 +113,13 @@ authRouter.post('/login', async (request, response) => {
    }
 
    const tokenUser = jwt.createTokenUser(user);
-   jwt.attachCookiesToResponse(response, tokenUser);
+
+   jwt.attachCookiesToResponse({ response, user: tokenUser });
+
+   console.log(
+      'attach cookies',
+      jwt.attachCookiesToResponse({ response, user: tokenUser })
+   );
 
    response.status(StatusCodes.OK).json({ user: tokenUser });
 });
