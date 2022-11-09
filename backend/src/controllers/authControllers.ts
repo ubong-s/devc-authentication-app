@@ -31,8 +31,6 @@ const register = async (request: Request, response: Response) => {
 
    const verificationToken = crypto.randomBytes(40).toString('hex');
 
-   const user = await User.create({ email, password, role, verificationToken });
-
    const origin = `http://localhost:3000`;
    const newOrigin = `https://devubong-auth-app.netlify.app`;
 
@@ -43,11 +41,13 @@ const register = async (request: Request, response: Response) => {
    // console.log('x-forwarded-protocol: ', request.get('x-forwarded-proto'));
 
    await mailer.sendVerificationEmail({
-      name: user.name || '',
-      email: user.email,
+      name: '',
+      email: email,
       token: verificationToken,
       origin,
    });
+
+   const user = await User.create({ email, password, role, verificationToken });
    // Send Verification Token back while testing in postman
    response.status(StatusCodes.OK).json({
       msg: 'Success! Please check your email to verify account',
@@ -210,7 +210,7 @@ const resetPassword = async (request: Request, response: Response) => {
    if (!email || !token || !password) {
       return response
          .status(StatusCodes.BAD_REQUEST)
-         .json({ msg: `Please provide valid email` });
+         .json({ msg: `Invalid credentials` });
    }
 
    const user = await User.findOne({ email });

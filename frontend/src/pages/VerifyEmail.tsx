@@ -4,7 +4,7 @@ import Loading from '../components/Loading/Loading';
 import { useUserContext } from '../context/userContext';
 import useLocalState from '../hooks/useLocalState';
 import useQuery from '../hooks/useQuery';
-import loginService from '../services/login';
+import loginService from '../services/auth';
 import { PageRootAlt } from './Pages.styles';
 
 const VerifyEmail = () => {

@@ -7,6 +7,12 @@ interface UserProps {
    password2?: string;
 }
 
+interface ResetPasswordProps {
+   email: string | null;
+   token: string | null;
+   password: string;
+}
+
 interface VerificationProps {
    email: string | null;
    verificationToken: string | null;
@@ -43,11 +49,19 @@ const forgotPassword = async (email: string) => {
    return response.data;
 };
 
-const loginService = {
+const resetPassword = async (credentials: ResetPasswordProps) => {
+   const response = await axios.post(`${baseUrl}/auth/reset-password`, {
+      credentials,
+   });
+   return response.data;
+};
+
+const authService = {
    register,
    login,
    verify,
    forgotPassword,
+   resetPassword,
 };
 
-export default loginService;
+export default authService;

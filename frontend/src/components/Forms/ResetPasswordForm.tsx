@@ -1,24 +1,32 @@
 import useField from '../../hooks/useField';
 import useLocalState from '../../hooks/useLocalState';
+import useQuery from '../../hooks/useQuery';
 import authService from '../../services/auth';
 import { Form } from './Form.styles';
 
-const ForgotPasswordForm = () => {
+const ResetPasswordForm = () => {
    const { alert, showAlert, loading, setLoading } = useLocalState();
-   const { reset: resetEmail, ...email } = useField('text');
+   const { reset: resetPassword, ...password } = useField('password');
+   const query = useQuery();
 
    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setLoading(true);
       try {
-         const data = await authService.forgotPassword(email.value);
+         const resetParams = {
+            email: query.get('email'),
+            token: query.get('token'),
+            password: password.value,
+         };
+
+         const data = await authService.resetPassword(resetParams);
 
          showAlert({
             text: data.msg,
             type: 'success',
          });
 
-         resetEmail();
+         resetPassword();
          setLoading(false);
       } catch (error: any) {
          showAlert({ text: error.response.data.msg });
@@ -32,15 +40,15 @@ const ForgotPasswordForm = () => {
 
    return (
       <Form onSubmit={handleSubmit}>
-         <label htmlFor='email'>
+         <label htmlFor='password'>
             <span>
-               <img src='/images/envelope.svg' alt='' />
+               <img src='/images/padlock.svg' alt='' />
             </span>
-            <input {...email} placeholder='Email' />
+            <input {...password} placeholder='New password' />
          </label>
-         <button type='submit'>Send Reset Link</button>
+         <button type='submit'>Confirm Password</button>
       </Form>
    );
 };
 
-export default ForgotPasswordForm;
+export default ResetPasswordForm;

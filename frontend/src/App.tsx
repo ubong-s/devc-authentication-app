@@ -29,8 +29,6 @@ function App() {
 
    const { data: user } = state;
 
-   console.log(user);
-
    return (
       <BrowserRouter>
          <ThemeProvider theme={myTheme.light}>

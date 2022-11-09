@@ -1,5 +1,5 @@
 import useField from '../../hooks/useField';
-import loginService from '../../services/login';
+import authService from '../../services/auth';
 import { Form } from './Form.styles';
 
 interface ShowAlertProps {
@@ -41,7 +41,7 @@ const RegisterForm = ({
          password2: password2.value,
       };
       try {
-         const data = await loginService.register(registerUser);
+         const data = await authService.register(registerUser);
 
          showAlert({
             text: data.msg,

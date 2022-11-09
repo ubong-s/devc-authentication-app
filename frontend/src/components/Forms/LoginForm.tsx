@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../context/userContext';
 import useField from '../../hooks/useField';
-import loginService from '../../services/login';
+import authService from '../../services/auth';
 import { Form } from './Form.styles';
 
 interface ShowAlertProps {
@@ -42,7 +42,7 @@ const LoginForm = ({
          password: password.value,
       };
       try {
-         const data = await loginService.login(loginUser);
+         const data = await authService.login(loginUser);
          showAlert({
             text: `Welcome, ${data.user.email}. Redirecting to dashboard`,
             type: 'success',
