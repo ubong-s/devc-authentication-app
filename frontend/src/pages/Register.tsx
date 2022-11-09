@@ -18,7 +18,7 @@ const Register = () => {
                <FormBoxHeader
                   title='Join thousands of learners from around the world'
                   imageUrl='/images/devchallenges.svg'
-                  imageAlt='dev changelles logo'
+                  imageAlt='dev challenges logo'
                   text='Master web development by making real-life projects. There
                      are multiple paths for you to choose'
                />
@@ -32,7 +32,11 @@ const Register = () => {
                />
 
                {/* Form Footer */}
-               <FormBoxFooter linkText='Login' linkUrl='/' />
+               <FormBoxFooter
+                  linkText='Login'
+                  linkUrl='/'
+                  resetPassword={false}
+               />
             </Box>
          </div>
       </PageRoot>

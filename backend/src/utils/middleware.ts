@@ -81,10 +81,22 @@ const errorHandler: ErrorRequestHandler = (
       });
    }
 
-   if (error.code === 'ESOCKET') {
-      logger.info(error);
+   if (error.code && error.code === 11000) {
+      response.status(StatusCodes.BAD_REQUEST).json({
+         msg: `Duplicate value entered for ${Object.keys(
+            error.keyValue
+         )} field, please choose another value`,
+      });
    }
-   next();
+   if (error.name === 'CastError') {
+      response.status(StatusCodes.BAD_REQUEST).json({
+         msg: `No item found with id : ${error.value}`,
+      });
+   }
+
+   return response.status(StatusCodes.BAD_REQUEST).json({
+      msg: error.message,
+   });
 };
 
 const unknownEndpoint = (request: Request, response: Response) => {

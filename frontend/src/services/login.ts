@@ -36,10 +36,18 @@ const verify = async (credentials: VerificationProps) => {
    return response.data;
 };
 
+const forgotPassword = async (email: string) => {
+   const response = await axios.post(`${baseUrl}/auth/forgot-password`, {
+      email,
+   });
+   return response.data;
+};
+
 const loginService = {
    register,
    login,
    verify,
+   forgotPassword,
 };
 
 export default loginService;

@@ -5,7 +5,6 @@ export const Form = styled.form`
    display: flex;
    flex-direction: column;
    gap: 14px;
-   margin-bottom: 2rem;
 
    label {
       position: relative;

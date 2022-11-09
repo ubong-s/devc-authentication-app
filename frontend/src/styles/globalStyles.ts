@@ -110,6 +110,7 @@ const bodyStyles = css`
       text-align: center;
       border-radius: ${misc.rounded.sm};
       color: ${(props) => props.theme.white};
+      font-size: 14px;
 
       &.danger {
          background-color: ${(props) => props.theme.redLight};

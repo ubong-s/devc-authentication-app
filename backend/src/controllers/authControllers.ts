@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/User';
 import Token from '../models/Token';
@@ -8,9 +8,7 @@ import mailer from '../utils/mailer';
 import middleware from '../utils/middleware';
 import hash from '../utils/hash';
 
-const authRouter = express.Router();
-
-authRouter.post('/register', async (request, response) => {
+const register = async (request: Request, response: Response) => {
    const { email, password, password2 } = request.body;
 
    const emailAlreadyExists = await User.findOne({ email });
@@ -44,19 +42,19 @@ authRouter.post('/register', async (request, response) => {
    // console.log('x-forwarded-host: ', request.get('x-forwarded-host'));
    // console.log('x-forwarded-protocol: ', request.get('x-forwarded-proto'));
 
-   // await mailer.sendVerificationEmail({
-   //    name: user.name || '',
-   //    email: user.email,
-   //    token: user.verificationToken,
-   //    origin,
-   // });
+   await mailer.sendVerificationEmail({
+      name: user.name || '',
+      email: user.email,
+      token: verificationToken,
+      origin,
+   });
    // Send Verification Token back while testing in postman
    response.status(StatusCodes.OK).json({
       msg: 'Success! Please check your email to verify account',
    });
-});
+};
 
-authRouter.post('/verify-email', async (request, response) => {
+const verifyEmail = async (request: Request, response: Response) => {
    const { verificationToken, email } = request.body;
 
    const user = await User.findOne({ email });
@@ -80,9 +78,9 @@ authRouter.post('/verify-email', async (request, response) => {
    await user.save();
 
    response.status(StatusCodes.OK).json({ msg: 'Email verified' });
-});
+};
 
-authRouter.post('/login', async (request, response) => {
+const login = async (request: Request, response: Response) => {
    const { email, password } = request.body;
 
    if (!email || !password) {
@@ -118,8 +116,8 @@ authRouter.post('/login', async (request, response) => {
 
    // create refresh token
    let refreshToken = '';
-   // check for existing token
 
+   // check for existing token
    const existingToken = await Token.findOne({ user: user._id });
 
    if (existingToken) {
@@ -149,29 +147,25 @@ authRouter.post('/login', async (request, response) => {
    jwt.attachCookiesToResponse({ response, user: tokenUser, refreshToken });
 
    response.status(StatusCodes.OK).json({ user: tokenUser });
-});
+};
 
-authRouter.delete(
-   '/logout',
-   middleware.authenticateUser,
-   async (request, response) => {
-      if (request.user) {
-         await Token.findOneAndDelete({ user: request.user.id });
+const logout = async (request: Request, response: Response) => {
+   if (request.user) {
+      await Token.findOneAndDelete({ user: request.user.id });
 
-         response.cookie('accessToken', 'logout', {
-            httpOnly: true,
-            expires: new Date(Date.now()),
-         });
+      response.cookie('accessToken', 'logout', {
+         httpOnly: true,
+         expires: new Date(Date.now()),
+      });
 
-         response.cookie('refreshToken', 'logout', {
-            httpOnly: true,
-            expires: new Date(Date.now()),
-         });
-      }
+      response.cookie('refreshToken', 'logout', {
+         httpOnly: true,
+         expires: new Date(Date.now()),
+      });
    }
-);
+};
 
-authRouter.post('/forgot-password', async (request, response) => {
+const forgotPassword = async (request: Request, response: Response) => {
    const { email } = request.body;
 
    if (!email) {
@@ -208,9 +202,9 @@ authRouter.post('/forgot-password', async (request, response) => {
    response
       .status(StatusCodes.OK)
       .json({ msg: `Please check your email for reset password link` });
-});
+};
 
-authRouter.post('/reset-password', async (request, response) => {
+const resetPassword = async (request: Request, response: Response) => {
    const { token, email, password } = request.body;
 
    if (!email || !token || !password) {
@@ -240,6 +234,13 @@ authRouter.post('/reset-password', async (request, response) => {
    response
       .status(StatusCodes.OK)
       .json({ msg: `Success, Redirecting to Login page` });
-});
+};
 
-export default authRouter;
+export default {
+   register,
+   verifyEmail,
+   login,
+   logout,
+   forgotPassword,
+   resetPassword,
+};

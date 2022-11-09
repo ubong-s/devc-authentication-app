@@ -8,7 +8,7 @@ const xss = require('xss-clean');
 
 import middleware from './utils/middleware';
 import config from './utils/config';
-import authRouter from './controllers/auth';
+import authRouter from './routes/authRoutes';
 import userRouter from './controllers/user';
 
 // app initialize

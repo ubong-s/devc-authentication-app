@@ -4,7 +4,7 @@ interface FormBoxHeaderProps {
    imageUrl: string;
    imageAlt: string;
    title: string;
-   text: string;
+   text?: string;
 }
 
 const FormBoxHeader = ({

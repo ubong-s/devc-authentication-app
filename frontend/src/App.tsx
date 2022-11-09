@@ -4,8 +4,9 @@ import { ThemeProvider } from 'styled-components';
 // components
 import Navbar from './components/Navbar/Navbar';
 
-// private route
+// routes
 import { PrivateRoute } from './routes/PrivateRoute';
+import { NotLoggedInRoute } from './routes/NotLoggedInRoute';
 
 // context
 import { useUserContext } from './context/userContext';
@@ -20,7 +21,8 @@ import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import { NotLoggedInRoute } from './routes/NotLoggedInRoute';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
    const [state] = useUserContext();
@@ -68,6 +70,24 @@ function App() {
                      <PrivateRoute>
                         <EditProfile />
                      </PrivateRoute>
+                  }
+               />
+
+               <Route
+                  path='/forgot-password'
+                  element={
+                     <NotLoggedInRoute>
+                        <ForgotPassword />
+                     </NotLoggedInRoute>
+                  }
+               />
+
+               <Route
+                  path='/reset-password'
+                  element={
+                     <NotLoggedInRoute>
+                        <ResetPassword />
+                     </NotLoggedInRoute>
                   }
                />
             </Routes>
