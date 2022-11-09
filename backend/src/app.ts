@@ -40,7 +40,7 @@ app.get('/', async (request, response) => {
    response.send('Authentication App');
 });
 app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
+app.use('/api/user', middleware.authenticateUser, userRouter);
 
 // Error Handler and Unknown Endpoint middlewares
 app.use(middleware.unknownEndpoint);

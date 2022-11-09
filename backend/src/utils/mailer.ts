@@ -9,14 +9,13 @@ interface SendMailProps {
    html: string;
 }
 
-interface SendVerificationEmailProps {
+interface SendEmailProps {
    name: string;
    email: string;
-   verificationToken?: string;
+   token: string;
    origin: string;
 }
 
-// request: Request, response: Response
 const sendEmail = async ({ to, subject, html }: SendMailProps) => {
    const transporter = nodemailer.createTransport(mailerConfig);
 
@@ -44,10 +43,10 @@ const verifyMailer = async () => {
 const sendVerificationEmail = async ({
    name,
    email,
-   verificationToken,
+   token,
    origin,
-}: SendVerificationEmailProps) => {
-   const verifyEmail = `${origin}/verify-email?token=${verificationToken}&email=${email}`;
+}: SendEmailProps) => {
+   const verifyEmail = `${origin}/verify-email?token=${token}&email=${email}`;
 
    const message = `<p>Please confirm your email by clicking on the following link : <a href="${verifyEmail}">Verify Email</a></p>`;
 
@@ -60,4 +59,28 @@ const sendVerificationEmail = async ({
    });
 };
 
-export default { sendEmail, verifyMailer, sendVerificationEmail };
+const sendResetPasswordEmail = async ({
+   name,
+   email,
+   token,
+   origin,
+}: SendEmailProps) => {
+   const resetURL = `${origin}/reset-password?token=${token}&email=${email}`;
+
+   const message = `<p>Please reset password by clicking on the following link : <a href="${resetURL}">Reset Password</a></p>`;
+
+   return sendEmail({
+      to: email,
+      subject: 'Reset Password',
+      html: `<h4>Hello ${name}</h4>
+      ${message}
+      `,
+   });
+};
+
+export default {
+   sendEmail,
+   verifyMailer,
+   sendVerificationEmail,
+   sendResetPasswordEmail,
+};

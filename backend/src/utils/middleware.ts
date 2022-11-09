@@ -2,6 +2,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import logger from './logger';
 import JWT from './jwt';
+import Token from '../models/Token';
 
 const requestLogger = (
    request: Request,
@@ -22,19 +23,37 @@ const authenticateUser = async (
    response: Response,
    next: NextFunction
 ) => {
-   const token = request.signedCookies.token;
-
-   if (!token) {
-      return response
-         .status(StatusCodes.UNAUTHORIZED)
-         .json({ msg: 'Authentication Invalid' });
-   }
+   const { refreshToken, accessToken } = request.signedCookies;
 
    try {
-      const { email, id, role } = JWT.isTokenValid(token);
+      if (accessToken) {
+         const payload = JWT.isTokenValid(accessToken);
 
-      request.user = { email, id, role };
-      next();
+         request.user = payload.user;
+         return next();
+      }
+
+      const payload = JWT.isTokenValid(refreshToken);
+
+      const existingToken = await Token.findOne({
+         user: payload.user.id,
+         refreshToken: payload.refreshToken,
+      });
+
+      if (!existingToken || !existingToken?.isValid) {
+         return response
+            .status(StatusCodes.UNAUTHORIZED)
+            .json({ msg: 'Authentication Invalid' });
+      }
+
+      JWT.attachCookiesToResponse({
+         response,
+         user: payload.user,
+         refreshToken: existingToken.refreshToken,
+      });
+
+      request.user = payload.user;
+      return next();
    } catch (error) {
       return response
          .status(StatusCodes.UNAUTHORIZED)
