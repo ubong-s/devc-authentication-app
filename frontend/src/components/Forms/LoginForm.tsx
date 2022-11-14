@@ -49,7 +49,7 @@ const LoginForm = ({
          });
          resetValues();
          setLoading(false);
-         setUser({ ...user, data: data.user });
+         setUser({ ...user, user: data.user });
          navigate('/profile');
       } catch (error: any) {
          showAlert({ text: error.response.data.msg });

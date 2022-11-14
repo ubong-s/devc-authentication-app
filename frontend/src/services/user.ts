@@ -6,6 +6,7 @@ const showMe = async () => {
       const response = await axios({
          method: 'GET',
          url: `${baseUrl}/user/showMe`,
+         // url: `${baseUrl}/auth/google/authorized`,
          withCredentials: true,
       });
 

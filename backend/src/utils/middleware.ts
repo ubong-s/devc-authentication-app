@@ -24,12 +24,17 @@ const authenticateUser = async (
    next: NextFunction
 ) => {
    const { refreshToken, accessToken } = request.signedCookies;
+   const connectSID = request.signedCookies['connect.sid'];
 
    try {
       if (accessToken) {
          const payload = JWT.isTokenValid(accessToken);
 
          request.user = payload.user;
+         return next();
+      }
+
+      if (connectSID) {
          return next();
       }
 
@@ -53,6 +58,7 @@ const authenticateUser = async (
       });
 
       request.user = payload.user;
+
       return next();
    } catch (error) {
       return response

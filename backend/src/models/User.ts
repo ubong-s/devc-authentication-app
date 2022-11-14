@@ -15,15 +15,27 @@ const UserSchema = new mongoose.Schema({
          message: 'Please provide valid email',
       },
    },
+   google: {
+      id: {
+         type: String,
+      },
+      name: {
+         type: String,
+      },
+      email: {
+         type: String,
+      },
+   },
    password: {
       type: String,
-      required: [true, 'Please provide password'],
-      minlength: 6,
    },
    bio: {
       type: String,
    },
    phone: {
+      type: String,
+   },
+   photo: {
       type: String,
    },
    role: {
@@ -54,12 +66,12 @@ UserSchema.set('toJSON', {
    },
 });
 
-UserSchema.pre('save', async function () {
-   if (!this.isModified('password')) return;
+// UserSchema.pre('save', async function () {
+//    if (!this.isModified('password')) return;
 
-   const salt = await bcrypt.genSalt(10);
-   this.password = await bcrypt.hash(this.password, salt);
-});
+//    const salt = await bcrypt.genSalt(10);
+//    this.password = await bcrypt.hash(this.password, salt);
+// });
 
 UserSchema.methods.comparePassword = async function (userPassword: string) {
    const isMatch = await bcrypt.compare(userPassword, this.password);

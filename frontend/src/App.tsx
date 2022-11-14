@@ -27,7 +27,7 @@ import ResetPassword from './pages/ResetPassword';
 function App() {
    const [state] = useUserContext();
 
-   const { data: user } = state;
+   const { user } = state;
 
    return (
       <BrowserRouter>

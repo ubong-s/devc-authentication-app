@@ -4,15 +4,20 @@ import { Response } from 'express';
 
 interface UserToken {
    _id: {};
+   name?: string;
    email: string;
    role: string;
+   photo?: string;
 }
 
 interface User {
    id: string;
+   name?: string;
    email: string;
    role: string;
+   photo?: string;
 }
+
 interface PayloadProps {
    payload: { user: User; refreshToken?: string };
 }
@@ -24,13 +29,16 @@ interface CookiesProps {
 }
 
 const createTokenUser = (user: UserToken) => {
-   return { email: user.email, id: String(user._id), role: user.role };
+   return {
+      id: String(user._id),
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      photo: user.photo,
+   };
 };
 
 const createJWT = ({ payload }: PayloadProps) => {
-   // const token = JWT.sign(payload, config.JWT_SECRET, {
-   //    expiresIn: config.JWT_LIFETIME,
-   // });
    const token = JWT.sign(payload, config.JWT_SECRET);
 
    return token;

@@ -11,5 +11,5 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
    const [state] = useUserContext();
 
    if (state.loading) return <Loading />;
-   return state.data ? <>{children}</> : <Navigate to='/' />;
+   return state.user ? <>{children}</> : <Navigate to='/' />;
 };

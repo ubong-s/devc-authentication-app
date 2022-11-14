@@ -11,5 +11,5 @@ export const NotLoggedInRoute = ({ children }: NotLoggedInRouteProps) => {
    const [state] = useUserContext();
 
    if (state.loading) return <Loading />;
-   return state.data ? <Navigate to='/profile' /> : <>{children}</>;
+   return state.user ? <Navigate to='/profile' /> : <>{children}</>;
 };

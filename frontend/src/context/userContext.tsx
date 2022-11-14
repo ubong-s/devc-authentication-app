@@ -2,10 +2,12 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import userService from '../services/user';
 
 interface UserAppState {
-   data: {
+   user: {
       id: string;
       email: string;
-      role: 'admin';
+      name?: string;
+      role: string;
+      photo?: string;
    } | null;
    error: string | null;
    loading: boolean;
@@ -13,11 +15,11 @@ interface UserAppState {
 
 const UserContext = createContext<
    [UserAppState, React.Dispatch<React.SetStateAction<UserAppState>>]
->([{ data: null, error: null, loading: true }, () => {}]);
+>([{ user: null, error: null, loading: true }, () => {}]);
 
 const UserProvider = ({ children }: any) => {
    const [user, setUser] = useState<UserAppState>({
-      data: null,
+      user: null,
       loading: true,
       error: null,
    });
@@ -26,10 +28,12 @@ const UserProvider = ({ children }: any) => {
       setUser(user);
    };
 
+   console.log(user);
+
    const removeUser = () => {
       setUser({
-         data: null,
-         loading: true,
+         user: null,
+         loading: false,
          error: null,
       });
    };
@@ -39,7 +43,7 @@ const UserProvider = ({ children }: any) => {
          const data = await userService.showMe();
 
          saveUser({
-            data,
+            user: data.user,
             loading: false,
             error: false,
          });

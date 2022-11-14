@@ -1,12 +1,14 @@
-import express, { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import User from '../models/User';
 import Token from '../models/Token';
 import jwt from '../utils/jwt';
 import crypto from 'crypto';
 import mailer from '../utils/mailer';
-import middleware from '../utils/middleware';
 import hash from '../utils/hash';
+import bcrypt from 'bcryptjs';
+import passport from 'passport';
+import config from '../utils/config';
 
 const register = async (request: Request, response: Response) => {
    const { email, password, password2 } = request.body;
@@ -17,6 +19,12 @@ const register = async (request: Request, response: Response) => {
       return response
          .status(StatusCodes.BAD_REQUEST)
          .json({ msg: 'Email already exists' });
+   }
+
+   if (password.length < 6) {
+      return response
+         .status(StatusCodes.BAD_REQUEST)
+         .json({ msg: 'Password must be 6 chars and above' });
    }
 
    if (password !== password2) {
@@ -40,14 +48,22 @@ const register = async (request: Request, response: Response) => {
    // console.log('x-forwarded-host: ', request.get('x-forwarded-host'));
    // console.log('x-forwarded-protocol: ', request.get('x-forwarded-proto'));
 
-   await mailer.sendVerificationEmail({
-      name: '',
-      email: email,
-      token: verificationToken,
-      origin,
-   });
+   const salt = await bcrypt.genSalt(10);
+   let hashedPassword = await bcrypt.hash(password, salt);
 
-   const user = await User.create({ email, password, role, verificationToken });
+   // await mailer.sendVerificationEmail({
+   //    name: '',
+   //    email: email,
+   //    token: verificationToken,
+   //    origin,
+   // });
+
+   const user = await User.create({
+      email,
+      password: hashedPassword,
+      role,
+      verificationToken,
+   });
    // Send Verification Token back while testing in postman
    response.status(StatusCodes.OK).json({
       msg: 'Success! Please check your email to verify account',
@@ -149,7 +165,11 @@ const login = async (request: Request, response: Response) => {
    response.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
-const logout = async (request: Request, response: Response) => {
+const logout = async (
+   request: Request,
+   response: Response,
+   next: NextFunction
+) => {
    if (request.user) {
       await Token.findOneAndDelete({ user: request.user.id });
 
@@ -162,6 +182,14 @@ const logout = async (request: Request, response: Response) => {
          httpOnly: true,
          expires: new Date(Date.now()),
       });
+
+      request.logout(function (err) {
+         if (err) {
+            return next(err);
+         }
+      });
+
+      response.json({ msg: 'logged out' });
    }
 };
 
@@ -236,6 +264,22 @@ const resetPassword = async (request: Request, response: Response) => {
       .json({ msg: `Success, Redirecting to Login page` });
 };
 
+const addGoogleUser = async ({ id, email, name, photo }: any) => {
+   const user = await User.create({
+      name,
+      email,
+      google: {
+         id,
+         name,
+         email,
+      },
+      photo,
+      isVerified: true,
+      verified: new Date(Date.now()),
+   });
+   return user;
+};
+
 export default {
    register,
    verifyEmail,
@@ -243,4 +287,5 @@ export default {
    logout,
    forgotPassword,
    resetPassword,
+   addGoogleUser,
 };

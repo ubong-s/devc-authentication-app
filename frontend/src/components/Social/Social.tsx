@@ -1,10 +1,15 @@
 import { SocialRoot } from './Social.styles';
+import authService from '../../services/auth';
 
 const Social = () => {
+   const googleLogin = async () => {
+      await authService.loginWithGoogle();
+   };
+
    return (
       <SocialRoot>
          <li>
-            <button type='button' aria-label='Google'>
+            <button type='button' aria-label='Google' onClick={googleLogin}>
                <img src='images/Google.svg' alt='Google icon' />
             </button>
          </li>
